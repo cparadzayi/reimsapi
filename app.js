@@ -1,3 +1,6 @@
+// http://mherman.org/blog/2016/03/13/designing-a-restful-api-with-node-and-postgres/#.WYy1A1EjFPZ
+
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -32,15 +35,35 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+// error handlers
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+  app.use(function(err, req, res, next) {
+    res.status( err.code || 500 )
+    .json({
+      status: 'error',
+      message: err
+    });
+  });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500)
+  .json({
+    status: 'error',
+    message: err.message
+  });
 });
 
+
 module.exports = app;
+
+// https://translate.google.co.zw/translate?hl=en&sl=id&u=https://furkonblog.wordpress.com/2017/03/19/nodejs-membangun-restfull-api-dengan-framework-express-dan-database-postgres/&prev=search
+// https://www.airpair.com/javascript/complete-expressjs-nodejs-mongodb-crud-skeleton
+// http://knexjs.org/
+// https://coligo.io/templating-node-and-express-apps-with-ejs/
